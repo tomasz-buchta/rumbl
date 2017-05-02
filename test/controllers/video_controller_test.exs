@@ -1,9 +1,18 @@
 defmodule Rumbl.VideoControllerTest do
   use Rumbl.ConnCase
 
+  import Ecto.Query
+
   alias Rumbl.Video
+  alias Rumbl.User
   @valid_attrs %{description: "some content", title: "some content", url: "some content"}
   @invalid_attrs %{}
+
+  setup %{conn: conn} do
+    user = %User{email: "user@test.com", name: "User user"} |> Repo.insert!
+    conn = conn |> assign(:current_user, user)
+    %{conn: conn}
+  end
 
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, video_path(conn, :index)
@@ -18,7 +27,9 @@ defmodule Rumbl.VideoControllerTest do
   test "creates resource and redirects when data is valid", %{conn: conn} do
     conn = post conn, video_path(conn, :create), video: @valid_attrs
     assert redirected_to(conn) == video_path(conn, :index)
-    assert Repo.get_by(Video, @valid_attrs)
+    video = Video |> last |> preload(:user) |> Repo.one
+    assert video
+    assert video.user
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
