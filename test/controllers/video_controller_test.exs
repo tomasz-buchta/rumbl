@@ -11,7 +11,7 @@ defmodule Rumbl.VideoControllerTest do
   setup %{conn: conn} do
     user = %User{email: "user@test.com", name: "User user"} |> Repo.insert!
     conn = conn |> assign(:current_user, user)
-    %{conn: conn}
+    %{conn: conn, user: user}
   end
 
   test "lists all entries on index", %{conn: conn} do
@@ -37,8 +37,8 @@ defmodule Rumbl.VideoControllerTest do
     assert html_response(conn, 200) =~ "New video"
   end
 
-  test "shows chosen resource", %{conn: conn} do
-    video = Repo.insert! %Video{}
+  test "shows chosen resource", %{conn: conn, user: user} do
+    video = Repo.insert! %Video{user: user}
     conn = get conn, video_path(conn, :show, video)
     assert html_response(conn, 200) =~ "Show video"
   end
@@ -49,27 +49,27 @@ defmodule Rumbl.VideoControllerTest do
     end
   end
 
-  test "renders form for editing chosen resource", %{conn: conn} do
-    video = Repo.insert! %Video{}
+  test "renders form for editing chosen resource", %{conn: conn, user: user} do
+    video = Repo.insert! %Video{user: user}
     conn = get conn, video_path(conn, :edit, video)
     assert html_response(conn, 200) =~ "Edit video"
   end
 
-  test "updates chosen resource and redirects when data is valid", %{conn: conn} do
-    video = Repo.insert! %Video{}
+  test "updates chosen resource and redirects when data is valid", %{conn: conn, user: user} do
+    video = Repo.insert! %Video{user: user}
     conn = put conn, video_path(conn, :update, video), video: @valid_attrs
     assert redirected_to(conn) == video_path(conn, :show, video)
     assert Repo.get_by(Video, @valid_attrs)
   end
 
-  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    video = Repo.insert! %Video{}
+  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn, user: user} do
+    video = Repo.insert! %Video{user: user}
     conn = put conn, video_path(conn, :update, video), video: @invalid_attrs
     assert html_response(conn, 200) =~ "Edit video"
   end
 
-  test "deletes chosen resource", %{conn: conn} do
-    video = Repo.insert! %Video{}
+  test "deletes chosen resource", %{conn: conn, user: user} do
+    video = Repo.insert! %Video{user: user}
     conn = delete conn, video_path(conn, :delete, video)
     assert redirected_to(conn) == video_path(conn, :index)
     refute Repo.get(Video, video.id)

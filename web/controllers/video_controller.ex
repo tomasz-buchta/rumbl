@@ -3,8 +3,8 @@ defmodule Rumbl.VideoController do
 
   alias Rumbl.Video
 
-  def index(conn, _params, _current_user) do
-    videos = Repo.all(Video)
+  def index(conn, _params, current_user) do
+    videos = Repo.all(user_videos(current_user))
     render(conn, "index.html", videos: videos)
   end
 
@@ -32,19 +32,19 @@ defmodule Rumbl.VideoController do
     end
   end
 
-  def show(conn, %{"id" => id}, _current_user) do
-    video = Repo.get!(Video, id)
+  def show(conn, %{"id" => id}, current_user) do
+    video = Repo.get!(user_videos(current_user), id)
     render(conn, "show.html", video: video)
   end
 
-  def edit(conn, %{"id" => id}, _current_user) do
-    video = Repo.get!(Video, id)
+  def edit(conn, %{"id" => id}, current_user) do
+    video = Repo.get!(user_videos(current_user), id)
     changeset = Video.changeset(video)
     render(conn, "edit.html", video: video, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "video" => video_params}, _current_user) do
-    video = Repo.get!(Video, id)
+  def update(conn, %{"id" => id, "video" => video_params}, current_user) do
+    video = Repo.get!(user_videos(current_user), id)
     changeset = Video.changeset(video, video_params)
 
     case Repo.update(changeset) do
@@ -57,11 +57,8 @@ defmodule Rumbl.VideoController do
     end
   end
 
-  def delete(conn, %{"id" => id}, _current_user) do
-    video = Repo.get!(Video, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
+  def delete(conn, %{"id" => id}, current_user) do
+    video = Repo.get!(user_videos(current_user), id)
     Repo.delete!(video)
 
     conn
@@ -72,5 +69,9 @@ defmodule Rumbl.VideoController do
   def action(conn, _) do
     apply(__MODULE__, action_name(conn),
                                   [conn, conn.params, conn.assigns.current_user])
+  end
+
+  defp user_videos(user) do
+    assoc(user, :videos)
   end
 end
