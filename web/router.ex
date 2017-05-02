@@ -24,6 +24,7 @@ defmodule Rumbl.Router do
     pipe_through :browser
     coherence_routes
     get "/", Rumbl.PageController, :index
+    resources "/videos", Rumbl.VideoController
   end
 
   scope "/" do
