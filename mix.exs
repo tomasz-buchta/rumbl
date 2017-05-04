@@ -38,7 +38,8 @@ defmodule Rumbl.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
-     {:coherence, "~> 0.3"}
+     {:coherence, "~> 0.3"},
+     {:ex_machina, "~> 2.0", only: :test}
     ]
   
   end
