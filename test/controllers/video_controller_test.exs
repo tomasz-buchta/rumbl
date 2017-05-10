@@ -22,6 +22,7 @@ defmodule Rumbl.VideoControllerTest do
     end)
   end
 
+
   describe "when user signed in" do
     setup %{conn: conn} do
       user = insert(:user)
@@ -29,9 +30,33 @@ defmodule Rumbl.VideoControllerTest do
       %{conn: conn, user: user}
     end
 
-    test "lists user entries on index", %{conn: conn} do
+    test "authorizes actions against access by other users", %{user: owner, conn: conn} do
+      video = insert(:video, user: owner)
+      non_owner = insert(:user)
+      conn = assign(conn, :current_user, non_owner)
+
+      assert_error_sent :not_found, fn ->
+        get(conn, video_path(conn, :show, video))
+      end
+
+      assert_error_sent :not_found, fn ->
+        get(conn, video_path(conn, :edit, video))
+      end
+
+      assert_error_sent :not_found, fn ->
+        put(conn, video_path(conn, :update, video, video: params_for(:video)))
+      end
+
+      assert_error_sent :not_found, fn ->
+        delete(conn, video_path(conn, :delete, video))
+      end
+    end
+
+    test "lists user entries on index", %{conn: conn, user: user} do
+      video = insert(:video, title: "Fancy video", user: user)
+      other_user_video = insert(:video, title: "Not fancy video")
       conn = get conn, video_path(conn, :index)
-      assert html_response(conn, 200) =~ "Listing videos"
+      assert html_response(conn, 200) =~ "Fancy video"
     end
 
     test "renders form for new resources", %{conn: conn} do
