@@ -39,7 +39,9 @@ defmodule Rumbl.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:coherence, "~> 0.3"},
-     {:ex_machina, "~> 2.0", only: :test}
+     {:ex_machina, "~> 2.0", only: :test},
+     {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
+     {:ex_unit_notifier, "~> 0.1", only: :test}
     ]
   
   end
