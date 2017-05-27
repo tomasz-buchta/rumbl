@@ -30,6 +30,7 @@ defmodule Rumbl.Router do
     pipe_through :protected
     coherence_routes :protected
     resources "/videos", Rumbl.VideoController
+    get "/watch/:id", Rumbl.WatchController, :show
   end
 
   pipeline :api do
