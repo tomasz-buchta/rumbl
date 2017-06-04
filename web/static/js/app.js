@@ -20,15 +20,9 @@ import "phoenix_html"
 
 // import socket from "./socket"
 //
-import Player from "./player"
 import socket from "./socket"
 import Video from "./video"
 
 let video = document.getElementById("video")
-Video.init(socket, video)
 
-if(video) {
-  Player.init(video.id, video.getAttribute("data-player-id"), () => {
-    console.log("player ready")
-  })
-}
+Video.init(socket, video)
