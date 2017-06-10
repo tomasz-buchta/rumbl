@@ -10,5 +10,4 @@ defmodule Rumbl.VideoChannelTest do
 
     {:ok, socket: socket}
   end
-
 end
