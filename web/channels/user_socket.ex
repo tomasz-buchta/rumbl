@@ -20,7 +20,7 @@ defmodule Rumbl.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(%{"token" => token}, socket) do
-    case Coherence.verify_user_token(socket, token, &assign/3) do
+    case Phoenix.Token.verify(socket, token) do
       {:error, _} -> :error
       {:ok, socket} -> {:ok, socket}
     end
