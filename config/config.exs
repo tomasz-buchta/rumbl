@@ -37,6 +37,7 @@ config :coherence,
   opts: [:authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token, :registerable]
 
 config :coherence, Rumbl.Coherence.Mailer,
+  user_token: true,
   adapter: Swoosh.Adapters.Sendgrid,
   api_key: "your api key here"
 # %% End Coherence Configuration %%
