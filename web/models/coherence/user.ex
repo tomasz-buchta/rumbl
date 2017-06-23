@@ -6,6 +6,7 @@ defmodule Rumbl.User do
     field :name, :string
     field :email, :string
     has_many :videos, Rumbl.Video
+    has_many :annotations, Rumbl.Annotation
     coherence_schema
 
     timestamps
