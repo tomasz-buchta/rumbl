@@ -2,23 +2,19 @@ defmodule Rumbl.VideoChannel do
   use Rumbl.Web, :channel
 
   def join("videos:" <> video_id, payload, socket) do
-    if authorized?(payload) do
-      video_id = String.to_integer(video_id)
-      video = Repo.get!(Rumbl.Video, video_id)
+    video_id = String.to_integer(video_id)
+    video = Repo.get!(Rumbl.Video, video_id)
 
-      annotations = Repo.all(
-        from a in assoc(video, :annotations),
-          order_by: [asc: a.at, asc: a.id],
-          limit: 200,
-          preload: [:user]
-      )
+    annotations = Repo.all(
+      from a in assoc(video, :annotations),
+        order_by: [asc: a.at, asc: a.id],
+        limit: 200,
+        preload: [:user]
+    )
 
-      response = %{annotations: Phoenix.View.render_many(annotations, Rumbl.AnnotationView,
-                                                         "annotation.json")}
-      {:ok, response, assign(socket, :video_id, video_id)}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
+    response = %{annotations: Phoenix.View.render_many(annotations, Rumbl.AnnotationView,
+                                                       "annotation.json")}
+    {:ok, response, assign(socket, :video_id, video_id)}
   end
 
   def handle_in(event, params, socket) do
@@ -45,10 +41,5 @@ defmodule Rumbl.VideoChannel do
       {:error, changeset} ->
         {:reply, {:error, %{errors: changeset}}, socket}
     end
-  end
-
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
   end
 end
