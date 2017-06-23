@@ -5,7 +5,6 @@ defmodule Rumbl.VideoControllerTest do
   import Rumbl.Factory
 
   alias Rumbl.Video
-  alias Rumbl.User
 
   test "requires user authentication on all actions", %{conn: conn} do
     Enum.each([
@@ -53,8 +52,8 @@ defmodule Rumbl.VideoControllerTest do
     end
 
     test "lists user entries on index", %{conn: conn, user: user} do
-      video = insert(:video, title: "Fancy video", user: user)
-      other_user_video = insert(:video, title: "Not fancy video")
+      insert(:video, title: "Fancy video", user: user)
+      insert(:video, title: "Not fancy video")
       conn = get conn, video_path(conn, :index)
       assert html_response(conn, 200) =~ "Fancy video"
     end
