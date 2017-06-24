@@ -25,6 +25,15 @@ let Video = {
       msgInput.value = ""
     })
 
+    msgContainer.addEventListener("click", e => {
+      e.preventDefault()
+      let seconds = e.target.getAttribute("data-seek") ||
+                    e.target.parentNode.getAttribute("data-seek")
+      if(!seconds) { return }
+
+      Player.seekTo(seconds)
+    })
+
     vidChannel.on("new_annotation", (resp) => {
       this.scheduleMessages(msgContainer, [resp])
     })
