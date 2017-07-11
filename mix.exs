@@ -43,6 +43,7 @@ defmodule Rumbl.Mixfile do
      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
      {:ex_unit_notifier, "~> 0.1", only: :test},
      {:sweet_xml, "~> 0.5.0"},
+     {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
     ]
   
   end
