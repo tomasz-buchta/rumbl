@@ -1,4 +1,0 @@
-# Rumbrella
-
-**TODO: Add description**
-
