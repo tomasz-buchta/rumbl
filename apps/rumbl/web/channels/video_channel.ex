@@ -53,7 +53,7 @@ defmodule Rumbl.VideoChannel do
     for result <- InfoSys.compute(ann.body, limit: 1, timeout: 10_000) do
       attrs = %{url: result.url, body: result.text, at: ann.at}
       info_changeset =
-        Repo.get_by!(Rumbl.User, user: result.backend)
+        Repo.get_by!(Rumbl.User, name: result.backend)
         |> build_assoc(:annotations, video_id: ann.video_id)
         |> Rumbl.Annotation.changeset(attrs)
       
